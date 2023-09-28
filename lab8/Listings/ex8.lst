@@ -1,0 +1,110 @@
+C51 COMPILER V9.60.0.0   EX8                                                               11/29/2022 16:31:07 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EX8
+OBJECT MODULE PLACED IN .\Objects\ex8.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ex8.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\ex8.l
+                    -st) TABS(2) OBJECT(.\Objects\ex8.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2          #include <string.h>
+   3          void init_uart(); 
+   4          char recivevalue; 
+   5          char word[] ={'E','9','4','0','9','6','2','6','7','\0'};//"E94096267";
+   6          
+   7          int i=0;
+   8          
+   9          char input[] ="xxxxxxxxx";
+  10          
+  11          void main()
+  12          {
+  13   1        init_uart(); 
+  14   1        while(1);
+  15   1      }
+  16          
+  17          void init_uart(void)
+  18          {
+  19   1         SCON=0x50;
+  20   1         TMOD=0x20;
+  21   1         TH1=0xe6; 
+  22   1         TR1=1; 
+  23   1         IE=0x90;
+  24   1      }
+  25          
+  26          void send( char *s)
+  27          {
+  28   1          while(*s) {
+  29   2              SBUF=*s++;
+  30   2              while(TI==0);
+  31   2              TI=0;
+  32   2          }
+  33   1      }
+  34          
+  35          
+  36          void uart(void) interrupt 4 
+  37          {
+  38   1        while(RI == 0);
+  39   1        RI=0;
+  40   1        
+  41   1        if(i<9)
+  42   1        {
+  43   2          input[i]=SBUF; 
+  44   2          P2 = input[i];  
+  45   2          i++;
+  46   2        }
+  47   1        else
+  48   1        { 
+  49   2          i=0;
+  50   2        }
+  51   1        //while(RI == 0);
+  52   1        //RI=0;
+  53   1        //recivevalue=SBUF; 
+  54   1        //P2 = recivevalue;
+C51 COMPILER V9.60.0.0   EX8                                                               11/29/2022 16:31:07 PAGE 2   
+
+  55   1        send("\r\n");
+  56   1        
+  57   1        if( input[0]==word[0] &&
+  58   1            input[1]==word[1] &&
+  59   1            input[2]==word[2] &&
+  60   1            input[3]==word[3] &&
+  61   1            input[4]==word[4] &&
+  62   1            input[5]==word[5] &&
+  63   1            input[6]==word[6] &&
+  64   1            input[7]==word[7] &&
+  65   1            input[8]==word[8] &&
+  66   1            input[9]==word[9]
+  67   1      
+  68   1        ) 
+  69   1        {
+  70   2          send("\r\n"); 
+  71   2          send("correct");    
+  72   2        }
+  73   1        else
+  74   1        {
+  75   2          send("\r\n"); 
+  76   2          send("wrong");    
+  77   2        } 
+  78   1          send("\r\n");
+  79   1          send(input);
+  80   1      
+  81   1        
+  82   1        
+  83   1        
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    249    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     23       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

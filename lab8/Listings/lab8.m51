@@ -1,0 +1,207 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    11/29/2022  16:31:07  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\STARTUP.obj, .\Objects\ex8.obj TO .\Objects\lab8 PRINT (.\Listings\lab8.m51) RAMSI
+>> ZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (?C_STARTUP)
+  .\Objects\ex8.obj (EX8)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDPTR)
+
+
+LINK MAP OF MODULE:  .\Objects\lab8 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0017H     UNIT         ?DT?EX8
+            DATA    001FH     0003H     UNIT         _DATA_GROUP_
+            IDATA   0022H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0020H                  *** GAP ***
+            CODE    0023H     0003H     ABSOLUTE     
+                    0026H     07DAH                  *** GAP ***
+            CODE    0800H     00B7H     UNIT         ?PR?UART?EX8
+            CODE    08B7H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0943H     002EH     UNIT         ?PR?_SEND?EX8
+            CODE    0971H     001DH     UNIT         ?C_INITSEG
+            CODE    098EH     0019H     UNIT         ?C?LIB_CODE
+            CODE    09A7H     0011H     UNIT         ?CO?EX8
+            CODE    09B8H     000FH     UNIT         ?PR?INIT_UART?EX8
+            CODE    09C7H     0005H     UNIT         ?PR?MAIN?EX8
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\lab8 (?C_STARTUP)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?EX8
+  +--> ?C_INITSEG
+
+?PR?MAIN?EX8                   -----    -----
+  +--> ?PR?INIT_UART?EX8
+
+*** NEW ROOT ***************************************************
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/29/2022  16:31:07  PAGE 2
+
+
+?PR?UART?EX8                   -----    -----
+  +--> ?PR?_SEND?EX8
+  +--> ?CO?EX8
+
+?PR?_SEND?EX8                  001FH    0003H
+  +--> ?CO?EX8
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\lab8 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:08B7H         SEGMENT       ?C_C51STARTUP
+  I:0022H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:08BAH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:08B7H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:08B7H         LINE#         133
+  C:08B9H         LINE#         134
+  C:08BAH         LINE#         135
+  C:08BBH         LINE#         136
+  C:08BDH         LINE#         185
+  C:08C0H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        EX8
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A0H         PUBLIC        P2
+  D:00A8H         PUBLIC        IE
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  D:0008H         PUBLIC        recivevalue
+  C:09C7H         PUBLIC        main
+  C:0949H         PUBLIC        _send
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/29/2022  16:31:07  PAGE 3
+
+
+  D:0099H         PUBLIC        SBUF
+  D:0009H         PUBLIC        input
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  C:0800H         PUBLIC        uart
+  D:0013H         PUBLIC        word
+  D:008DH         PUBLIC        TH1
+  C:09B8H         PUBLIC        init_uart
+  B:0088H.6       PUBLIC        TR1
+  D:001DH         PUBLIC        i
+  -------         PROC          MAIN
+  C:09C7H         LINE#         11
+  C:09C7H         LINE#         12
+  C:09C7H         LINE#         13
+  C:09CAH         LINE#         14
+  -------         ENDPROC       MAIN
+  -------         PROC          INIT_UART
+  C:09B8H         LINE#         17
+  C:09B8H         LINE#         18
+  C:09B8H         LINE#         19
+  C:09BBH         LINE#         20
+  C:09BEH         LINE#         21
+  C:09C1H         LINE#         22
+  C:09C3H         LINE#         23
+  C:09C6H         LINE#         24
+  -------         ENDPROC       INIT_UART
+  C:0943H         SYMBOL        L?0021
+  -------         PROC          L?0020
+  -------         ENDPROC       L?0020
+  C:0943H         SYMBOL        L?0021
+  -------         PROC          _SEND
+  D:001FH         SYMBOL        s
+  C:0949H         LINE#         26
+  C:094FH         LINE#         27
+  C:094FH         LINE#         28
+  C:095AH         LINE#         29
+  C:0969H         LINE#         30
+  C:096CH         LINE#         31
+  C:096EH         LINE#         32
+  C:0970H         LINE#         33
+  -------         ENDPROC       _SEND
+  -------         PROC          UART
+  C:0800H         LINE#         36
+  C:0815H         LINE#         38
+  C:0818H         LINE#         39
+  C:081AH         LINE#         41
+  C:0827H         LINE#         42
+  C:0827H         LINE#         43
+  C:082FH         LINE#         44
+  C:0836H         LINE#         45
+  C:083EH         LINE#         46
+  C:0840H         LINE#         48
+  C:0840H         LINE#         49
+  C:0846H         LINE#         50
+  C:0846H         LINE#         55
+  C:0849H         LINE#         57
+  C:0881H         LINE#         69
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/29/2022  16:31:07  PAGE 4
+
+
+  C:0881H         LINE#         70
+  C:0884H         LINE#         71
+  C:088AH         LINE#         72
+  C:088CH         LINE#         74
+  C:088CH         LINE#         75
+  C:088FH         LINE#         76
+  C:0898H         LINE#         77
+  C:0898H         LINE#         78
+  C:089BH         LINE#         79
+  C:08A4H         LINE#         84
+  -------         ENDPROC       UART
+  -------         ENDMOD        EX8
+
+  -------         MODULE        ?C?CLDPTR
+  C:098EH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0138H BYTE (15%) *
+******************************************************************************
+
+Program Size: data=35.0 xdata=0 code=466
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
