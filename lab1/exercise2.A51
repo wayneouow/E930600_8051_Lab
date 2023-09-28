@@ -1,0 +1,5 @@
+ORG 0
+MOV A, #11H
+MOV 0E0H, #22H
+SJMP $
+END

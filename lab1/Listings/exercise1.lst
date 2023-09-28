@@ -1,0 +1,38 @@
+A51 MACRO ASSEMBLER  EXERCISE1                                                            09/27/2022 17:20:36 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\exercise1.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE exercise1.A51 SET(SMALL) DEBUG PRINT(.\Listings\exercise1.lst) OBJECT(.
+                      \Objects\exercise1.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0
+0000 7801              2     MOV R0, #01H
+0002 79FF              3     MOV R1, #0FFH
+0004 D2D3              4     SETB RS0 ; switch from RB0 to RB1
+0006 A800              5     MOV R0, 00H
+0008 E501              6     MOV A, 01H
+000A E8                7     MOV A, R0
+000B E508              8     MOV A, 08H
+000D E6                9     MOV A, @R0
+000E C2D3             10     CLR RS0 ; switch from RB1 to RB0
+0010 E8               11     MOV A, R0
+0011 80FE             12     SJMP $
+                      13     END
+A51 MACRO ASSEMBLER  EXERCISE1                                                            09/27/2022 17:20:36 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

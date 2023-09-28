@@ -1,0 +1,96 @@
+A51 MACRO ASSEMBLER  EX6P                                                                 10/25/2022 16:36:22 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\ex6p.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex6p.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex6p.lst) OBJECT(.\Objects\e
+                      x6p.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 00H ;code start from 00H
+0000 802E              2     SJMP MAIN ;jump to MAIN
+0003                   3     ORG 03H ;vector address forINT0
+0003 8040              4     SJMP INT0_ISR ;jump to INT0_ISR
+0013                   5     ORG 13H ;
+0013 803E              6     SJMP INT1_ISR ;
+0030                   7     ORG 030H ;after vector table space
+                       8             
+0030                   9     MAIN:
+0030 75A885           10     MOV IE,#10000101B ;enable EA and EX0
+0033 758130           11     MOV SP,#30H ;stack start from #30H
+0036 C288             12     CLR IT0 ;falling edge-triggered
+0038 C28A             13     CLR IT1 ;
+003A D2BA             14     SETB PX1;
+003C 7400             15     MOV A, #00000000B ;set ACC as0000000B
+                      16     
+003E                  17     LOOP:
+003E F5A0             18     MOV P2,A ;P1 = A (LED output)
+0040 116D             19     CALL DELAY ;call delay function
+0042 F4               20     CPL A ;reverse A
+0043 80F9             21     SJMP LOOP ;infinite loop
+                      22     
+0045 116D             23     INT0_ISR: CALL DELAY ;call delay function
+0047 C0D0             24     PUSH PSW ;push PSW into stack
+0049 C0E0             25     PUSH 0e0h ;A ;push ACC into stack
+004B D2D3             26     SETB RS0 ;switch to RB1
+004D 74F0             27     MOV A, #11110000B ;set ACC as 11111110B
+004F 7818             28     MOV R0,#24 ;loop counter = 24
+0051 800E             29     JMP ROTATE_L
+                      30     
+0053 116D             31     INT1_ISR: CALL DELAY ;call delay function
+0055 C0D0             32     PUSH PSW ;push PSW into stack
+0057 C0E0             33     PUSH 0e0h ;A ;push ACC into stack
+0059 D2D4             34     SETB RS1
+005B C2D3             35     CLR RS0
+005D 74FE             36     MOV A, #11111110B ;set ACC as 11111110B
+005F 7810             37     MOV R0,#16 ;loop counter
+                      38     
+0061                  39     ROTATE_L: 
+0061 F5A0             40     MOV P2,A ;P2 = A (LED output)
+0063 116D             41     CALL DELAY ;call delay function
+0065 23               42     RL A ;rotate left
+0066 D8F9             43     DJNZ R0,ROTATE_L ;loop until R0 is 0
+0068 D0E0             44     POP 0e0h ;A ;pop out ACC fromstack
+006A D0D0             45     POP PSW ;pop out PSW fromstack
+006C 32               46     RETI ;return from ISR
+                      47     
+006D                  48     DELAY:
+006D 7FC8             49     MOV R7,#200
+006F                  50     D1:
+006F 7EFA             51     MOV R6,#250
+0071 DEFE             52     DJNZ R6, $
+0073 DFFA             53     DJNZ R7,D1
+0075 22               54     RET ;return
+                      55     END ;end the code
+                             
+A51 MACRO ASSEMBLER  EX6P                                                                 10/25/2022 16:36:22 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+D1 . . . . . . . .  C ADDR   006FH   A   
+DELAY. . . . . . .  C ADDR   006DH   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+INT0_ISR . . . . .  C ADDR   0045H   A   
+INT1_ISR . . . . .  C ADDR   0053H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+IT1. . . . . . . .  B ADDR   0088H.2 A   
+LOOP . . . . . . .  C ADDR   003EH   A   
+MAIN . . . . . . .  C ADDR   0030H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+PX1. . . . . . . .  B ADDR   00B8H.2 A   
+ROTATE_L . . . . .  C ADDR   0061H   A   
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . .  B ADDR   00D0H.4 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

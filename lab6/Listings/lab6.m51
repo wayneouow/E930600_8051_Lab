@@ -1,0 +1,97 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    10/25/2022  16:36:22  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\ex6p.obj TO .\Objects\lab6 PRINT (.\Listings\lab6.m51) RAMSIZE (256)
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\ex6p.obj (EX6P)
+
+
+LINK MAP OF MODULE:  .\Objects\lab6 (EX6P)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0076H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\lab6 (EX6P)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        EX6P
+  C:006FH         SYMBOL        D1
+  C:006DH         SYMBOL        DELAY
+  D:00A8H         SYMBOL        IE
+  C:0045H         SYMBOL        INT0_ISR
+  C:0053H         SYMBOL        INT1_ISR
+  B:0088H.0       SYMBOL        IT0
+  B:0088H.2       SYMBOL        IT1
+  C:003EH         SYMBOL        LOOP
+  C:0030H         SYMBOL        MAIN
+  D:00A0H         SYMBOL        P2
+  D:00D0H         SYMBOL        PSW
+  B:00B8H.2       SYMBOL        PX1
+  C:0061H         SYMBOL        ROTATE_L
+  B:00D0H.3       SYMBOL        RS0
+  B:00D0H.4       SYMBOL        RS1
+  D:0081H         SYMBOL        SP
+  C:0000H         LINE#         2
+  C:0003H         LINE#         4
+  C:0013H         LINE#         6
+  C:0030H         LINE#         10
+  C:0033H         LINE#         11
+  C:0036H         LINE#         12
+  C:0038H         LINE#         13
+  C:003AH         LINE#         14
+  C:003CH         LINE#         15
+  C:003EH         LINE#         18
+  C:0040H         LINE#         19
+  C:0042H         LINE#         20
+  C:0043H         LINE#         21
+  C:0045H         LINE#         23
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  10/25/2022  16:36:22  PAGE 2
+
+
+  C:0047H         LINE#         24
+  C:0049H         LINE#         25
+  C:004BH         LINE#         26
+  C:004DH         LINE#         27
+  C:004FH         LINE#         28
+  C:0051H         LINE#         29
+  C:0053H         LINE#         31
+  C:0055H         LINE#         32
+  C:0057H         LINE#         33
+  C:0059H         LINE#         34
+  C:005BH         LINE#         35
+  C:005DH         LINE#         36
+  C:005FH         LINE#         37
+  C:0061H         LINE#         40
+  C:0063H         LINE#         41
+  C:0065H         LINE#         42
+  C:0066H         LINE#         43
+  C:0068H         LINE#         44
+  C:006AH         LINE#         45
+  C:006CH         LINE#         46
+  C:006DH         LINE#         49
+  C:006FH         LINE#         51
+  C:0071H         LINE#         52
+  C:0073H         LINE#         53
+  C:0075H         LINE#         54
+  -------         ENDMOD        EX6P
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 004CH BYTE ( 3%) *
+******************************************************************************
+
+Program Size: data=8.0 xdata=0 code=118
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,173 @@
+A51 MACRO ASSEMBLER  EX3                                                                  10/11/2022 21:53:35 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\ex3.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex3.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex3.lst) OBJECT(.\Objects\ex3
+                      .obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0 ; start from 0000H
+0000 90007A            2     MOV DPTR, #TABLE ; DPTR point to TABLE
+0003 7D02              3     MOV R5, #2 ;cnt
+                       4     
+0005 7801              5     START: MOV R0, #1 ; initialize typed signal
+0007 7904              6     MOV R1, #4 ; set 4 row
+0009 7AF7              7     MOV R2, #11110111B ; set first row
+                       8     
+                       9     
+000B EA               10     SCAN: MOV A, R2 ; move R2 to A
+000C F5A0             11     MOV P2, A ; input scanned signal
+000E 30A712           12     JNB P2.7, NUMIN ; scan column 1
+0011 08               13     INC R0 ; add #01 into R0
+0012 30A60E           14     JNB P2.6, NUMIN ; scan column 2
+0015 08               15     INC R0 ; add #01 into R0
+0016 30A50A           16     JNB P2.5, NUMIN ; scan column 3
+0019 08               17     INC R0 ; add #01 into R0
+001A 30A411           18     JNB P2.4, KEYIN ; scan column 4
+                      19     
+001D 03               20     RR A ; next row
+001E FA               21     MOV R2, A ; move A to R2
+001F D9EA             22     DJNZ R1, SCAN ; scan 4 rows
+0021 80E2             23     SJMP START;
+                      24     
+0023 114E             25     NUMIN: CALL DEBOUNCE ; call debounce function
+0025 E8               26     MOV A,R0;
+0026 DD03             27     DJNZ R5, NUM_ONE;
+0028 FE               28     MOV R6, A;
+                      29     ;MOV R5, #2;
+0029 80DA             30     SJMP START;
+                      31     
+002B FF               32     NUM_ONE: MOV R7,A;
+002C 80D7             33     SJMP START;
+                      34     
+002E 114E             35     KEYIN: CALL DEBOUNCE ;call debounce function
+0030 E9               36                     MOV A, R1                       ; move R0 to A
+0031 14               37                     DEC A                           ;sub #1 into A
+0032 6037             38                     JZ      _DIV_                   ;if A = 3,push A button, jump to add1 
+0034 14               39                     DEC A                           ;sub #1 into A
+0035 602E             40                     JZ      _MUL_                   ;if A = 7,push B button, jump to sub1
+0037 14               41                     DEC A                           ;sub #1 into A
+0038 6024             42                     JZ      _SUB_                   ;if A = 11,push C button, jump to mul1
+003A 14               43                     DEC A                           ;sub #1 into A
+003B 601A             44                     JZ      _ADD_           ;if A = 15,push D button, jump to div1
+003D 80C6             45                     SJMP START;
+                      46                     
+003F                  47     CAL_DISP:
+003F 75F00A           48             MOV B, #10;
+0042 84               49             DIV AB;
+                      50             
+0043 93               51             MOVC A, @A+DPTR;
+0044 F590             52             MOV P1, A;
+                      53             
+0046 1171             54             CALL DELAY;     
+                      55             
+0048 E5F0             56             MOV A,B;
+004A 93               57             MOVC A, @A+DPTR;
+A51 MACRO ASSEMBLER  EX3                                                                  10/11/2022 21:53:35 PAGE     2
+
+004B F590             58             MOV P1, A;
+                      59             
+004D 22               60             RET;
+                      61     
+                      62     
+004E 7C64             63     DEBOUNCE: MOV R4, #100 ; move 50 times into R4
+0050 7BFA             64     DE_500_us: MOV R3, #250 ; move 250 times into R3
+0052 DBFE             65     DJNZ R3, $ ; jump to itself R3 times
+0054 DCFA             66     DJNZ R4, DE_500_us ; delay 25ms
+0056 22               67     RET ; return to main code
+                      68     
+                      69     
+                      70     
+                      71             
+0057                  72     _ADD_:
+                      73     
+0057 EE               74             MOV A, R6;
+0058 8FF0             75             MOV B, R7;
+005A 25F0             76             ADD A,B;
+005C 80E1             77             SJMP  CAL_DISP;
+005E                  78     _SUB_:
+                      79     
+005E EE               80             MOV A, R6;
+005F 8FF0             81             MOV B, R7;
+0061 95F0             82             SUBB A,B;
+0063 80DA             83             SJMP  CAL_DISP;
+                      84     
+0065                  85     _MUL_:
+                      86     
+0065 EE               87             MOV A, R6;
+0066 8FF0             88             MOV B, R7;
+0068 A4               89             MUL AB;
+0069 80D4             90             SJMP  CAL_DISP;
+                      91             
+006B                  92     _DIV_:
+006B EE               93             MOV A, R6;
+006C 8FF0             94             MOV B, R7;
+006E 84               95             DIV AB;
+006F 80CE             96             SJMP  CAL_DISP;
+                      97             
+0071                  98     DELAY:
+0071 7BFA             99      MOV R3,#250  
+0073                 100     D1:
+0073 7CFA            101      MOV R4,#250
+                     102     
+0075                 103     D2:
+                     104     
+0075 DCFE            105      DJNZ R4,D2
+0077 DBFA            106      DJNZ R3,D1
+0079 22              107      RET    
+                     108     ;
+                     109     
+                     110     
+                     111     
+                     112     
+007A                 113     TABLE:  
+007A 03              114                     DB 00000011B        ; display 0”
+007B 9F              115                     DB 10011111B        ; display 1“1”
+007C 25              116             DB 00100101B        ; display 2“2”
+007D 0D              117             DB 00001101B        ; display 4“3”
+007E 99              118             DB 10011001B        ; display 4“4”
+007F 49              119             DB 01001001B        ; display 5“5”
+0080 41              120             DB 01000001B        ; display 6 “6”
+0081 1B              121             DB 00011011B        ; display 7 “7”
+0082 01              122             DB 00000001B        ; display 8
+0083 09              123             DB 00001001B        ;display 9
+A51 MACRO ASSEMBLER  EX3                                                                  10/11/2022 21:53:35 PAGE     3
+
+                     124                     
+                     125                     
+                     126                     END
+A51 MACRO ASSEMBLER  EX3                                                                  10/11/2022 21:53:35 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+CAL_DISP . . . . .  C ADDR   003FH   A   
+D1 . . . . . . . .  C ADDR   0073H   A   
+D2 . . . . . . . .  C ADDR   0075H   A   
+DEBOUNCE . . . . .  C ADDR   004EH   A   
+DELAY. . . . . . .  C ADDR   0071H   A   
+DE_500_US. . . . .  C ADDR   0050H   A   
+KEYIN. . . . . . .  C ADDR   002EH   A   
+NUMIN. . . . . . .  C ADDR   0023H   A   
+NUM_ONE. . . . . .  C ADDR   002BH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+SCAN . . . . . . .  C ADDR   000BH   A   
+START. . . . . . .  C ADDR   0005H   A   
+TABLE. . . . . . .  C ADDR   007AH   A   
+_ADD_. . . . . . .  C ADDR   0057H   A   
+_DIV_. . . . . . .  C ADDR   006BH   A   
+_MUL_. . . . . . .  C ADDR   0065H   A   
+_SUB_. . . . . . .  C ADDR   005EH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

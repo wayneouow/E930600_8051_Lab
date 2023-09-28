@@ -1,0 +1,63 @@
+A51 MACRO ASSEMBLER  EX5                                                                  10/18/2022 18:19:08 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+NO OBJECT MODULE REQUESTED
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex5.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex5.lst) OBJECT(.\Objects\ex5
+                      .obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000h
+0000 802E              2     JMP LOOP ;jump into loop
+0030                   3     ORG 0030h
+0030 758132            4     LOOP: MOV SP, #32h ;SP = #32H
+0033 74FC              5     MOV A, #11111100B ;A = #0xfe
+0035 F5A0              6     MOV P2, A ;P2 = A
+0037 D290              7     SETB P1.0 ;set p1.0 to high
+0039 7808              8     MOV R0, #8D ;set the execution times of marquee
+003B                   9     JMP P1.3, MARQUEE ;jump into marquee when p1.0 is low
+*** _________________________^
+*** ERROR #A38 IN 9 (ex5.A51, LINE 9): NUMBER OF OPERANDS DOES NOT MATCH INSTRUCTION
+003B 80F3             10     JMP LOOP ;infinite loop
+                      11     
+003D C000             12     MARQUEE: PUSH 00h ;push the value of R0 into stack
+003F 78FA             13     MOV R0, #250D ;set the execution times of DELAY1
+0041 114C             14     CALL DELAY1 ;call DELAY1
+0043 D000             15     POP 00h ;pop out the value of R0 which is pushed in line11
+0045 23               16     RL A ;left rotate
+0046 F5A0             17     MOV P2, A ;set the value of A into P2
+0048 D8F3             18     DJNZ R0, MARQUEE ;loop back until MARQUEE execute 8 times
+004A 80E4             19     JMP LOOP ;end of MARQUEE, back to LOOP
+                      20     
+004C C000             21     DELAY1: PUSH 00h ;push the remain times of DELAY1 into stack
+004E 78FA             22     MOV R0, #250D ;set the execution times of DELAY2
+0050 1157             23     CALL DELAY2 ;call DELAY2
+0052 D000             24     POP 00h ;pop the remain times of DELAY1 back to R0
+0054 D8F6             25     DJNZ R0, DELAY1 ;loop until R0 is 0
+0056 22               26     RET ;return to MARQUEE
+0057 D8FE             27     DELAY2: DJNZ R0, DELAY2 ;loop until R0 is 0
+0059 22               28     RET ;return to DELAY1
+                      29     END
+                             
+A51 MACRO ASSEMBLER  EX5                                                                  10/18/2022 18:19:08 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY1 . . . . . .  C ADDR   004CH   A   
+DELAY2 . . . . . .  C ADDR   0057H   A   
+LOOP . . . . . . .  C ADDR   0030H   A   
+MARQUEE. . . . . .  C ADDR   003DH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 1 ERROR(S)

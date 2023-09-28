@@ -1,0 +1,79 @@
+A51 MACRO ASSEMBLER  EX6                                                                  10/25/2022 16:25:09 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\ex6.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex6.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex6.lst) OBJECT(.\Objects\ex6
+                      .obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 00H ;code start from 00H
+0000 802E              2     SJMP MAIN ;jump to MAIN
+0003                   3     ORG 03H ;vector address forINT0
+0003 803C              4     SJMP INT0_ISR ;jump to INT0_ISR
+0030                   5     ORG 030H ;after vector table space
+                       6             
+0030                   7     MAIN:
+0030 75A881            8     MOV IE,#10000001B ;enable EA and EX0
+0033 758130            9     MOV SP,#30H ;stack start from #30H
+0036 C288             10     CLR IT0 ;falling edge-triggered
+0038 7400             11     MOV A, #00000000B ;set ACC as0000000B
+                      12     
+003A                  13     LOOP:
+003A F5A0             14     MOV P2,A ;P1 = A (LED output)
+003C 1159             15     CALL DELAY ;call delay function
+003E F4               16     CPL A ;reverse A
+003F 80F9             17     SJMP LOOP ;infinite loop
+                      18     
+0041 1159             19     INT0_ISR: CALL DELAY ;call delay function
+0043 C0D0             20     PUSH PSW ;push PSW into stack
+0045 C0E0             21     PUSH 0e0h ;A ;push ACC into stack
+0047 D2D3             22     SETB RS0 ;switch to RB1
+0049 74FE             23     MOV A, #11111110B ;set ACC as 11111110B
+004B 7818             24     MOV R0,#24 ;loop counter = 24
+                      25     
+004D                  26     ROTATE_L: 
+004D F5A0             27     MOV P2,A ;P2 = A (LED output)
+004F 1159             28     CALL DELAY ;call delay function
+0051 23               29     RL A ;rotate left
+0052 D8F9             30     DJNZ R0,ROTATE_L ;loop until R0 is 0
+0054 D0E0             31     POP 0e0h ;A ;pop out ACC fromstack
+0056 D0D0             32     POP PSW ;pop out PSW fromstack
+0058 32               33     RETI ;return from ISR
+                      34     
+0059                  35     DELAY:
+0059 7FC8             36     MOV R7,#200
+005B                  37     D1:
+005B 7EFA             38     MOV R6,#250
+005D DEFE             39     DJNZ R6, $
+005F DFFA             40     DJNZ R7,D1
+0061 22               41     RET ;return
+                      42     END ;end the code
+                             
+A51 MACRO ASSEMBLER  EX6                                                                  10/25/2022 16:25:09 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+D1 . . . . . . . .  C ADDR   005BH   A   
+DELAY. . . . . . .  C ADDR   0059H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+INT0_ISR . . . . .  C ADDR   0041H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+LOOP . . . . . . .  C ADDR   003AH   A   
+MAIN . . . . . . .  C ADDR   0030H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+ROTATE_L . . . . .  C ADDR   004DH   A   
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,148 @@
+A51 MACRO ASSEMBLER  EX44                                                                 10/11/2022 21:16:06 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\ex44.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex44.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex44.lst) OBJECT(.\Objects\e
+                      x44.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0               ; start from 0000H
+0000 9000A0            2             MOV DPTR, #TABLE    ; DPTR point to TABLE
+0003 7D02              3                     MOV R5,#2
+0005 7801              4     START:  MOV R0, #1          ; initialize typed signal
+0007 7904              5             MOV R1, #4          ; set 3 row
+0009 7AF7              6             MOV R2, #11110111B  ; set first row
+000B EA                7     SCAN:   MOV A, R2           ; move R2 to A
+000C F5A0              8             MOV P2, A           ; input scanned signal
+000E 30A712            9                     JNB P2.7, GET     ; scan column 1
+0011 08               10             INC R0              ; add #01 into R0
+0012 30A60E           11             JNB P2.6, GET     ; scan column 2
+0015 08               12             INC R0              ; add #01 into R0
+0016 30A50A           13             JNB P2.5, GET     ; scan column 3
+0019 08               14             INC R0              ; add #01 into R0
+001A 30A413           15             JNB P2.4, CALCULATE     ; scan column 1
+001D 03               16             RR A                ; next row
+001E FA               17             MOV R2, A           ; move A to R2
+001F D9EA             18             DJNZ R1, SCAN       ; scan 3 rows
+0021 80E2             19             SJMP START          ; jump to scan keypad again
+0023 114B             20     GET:    CALL DEBOUNCE           ;call debounce
+0025 E8               21                     MOV A,R0                        ; if A has defined , jumo to define B
+0026 DD05             22                     DJNZ R5, NUM_ONE                        ;move R0 to A
+0028 FF               23                     MOV R7,A                                ;add #1 into A
+0029 7D02             24                     MOV R5, #2
+002B 80D8             25                     SJMP START
+002D FE               26     NUM_ONE:MOV R6, A                       ;move R0 to B
+002E 80D5             27                     SJMP START                      ; jump to scan keypad again
+0030 114B             28     CALCULATE: CALL DEBOUNCE    ;call debounce function
+0032 E9               29                     MOV A, R1                       ; move R0 to A
+0033 14               30                     DEC A                           ;sub #1 into A
+0034 6057             31                     JZ      DIV1                    ;if A = 3,push A button, jump to add1 
+0036 14               32                     DEC A                           ;sub #1 into A
+0037 603D             33                     JZ      MUL1                    ;if A = 7,push B button, jump to sub1
+0039 14               34                     DEC A                           ;sub #1 into A
+003A 6030             35                     JZ      SUB1                    ;if A = 11,push C button, jump to mul1
+003C 14               36                     DEC A                           ;sub #1 into A
+003D 6015             37                     JZ      ADD1                    ;if A = 15,push D button, jump to div1
+003F 80C4             38                     SJMP START                      ; jump to start
+0041 93               39     KEYIN:  MOVC A, @A+DPTR     ; according A, get signal from TABLE
+0042 F590             40             MOV P1, A           ; output displayed signal
+0044 22               41             RET
+0045 E5F0             42     KEYIN_B: MOV A, B 
+0047 93               43                     MOVC A, @A+DPTR     ; according A, get signal from TABLE
+0048 F590             44             MOV P1, A           ; output displayed signal
+004A 22               45             RET
+004B 7CC8             46     DEBOUNCE: MOV R4, #200       ; move 50 times into R4
+004D 7BFA             47     DE_500_us: MOV R3, #250     ; move 250 times into R3
+004F DBFE             48             DJNZ R3, $          ; jump to itself R3 times
+0051 DCFA             49             DJNZ R4, DE_500_us  ; delay 25ms
+0053 22               50             RET                 ; return to main code
+0054 EE               51     ADD1:   MOV A,R6
+0055 8FF0             52                     MOV B,R7
+0057 25F0             53                     ADD A, B                ; A+B, then save into ACC
+0059 75F00A           54                     MOV B, #10
+005C 84               55                     DIV AB
+005D 93               56     PRINT:  MOVC A, @A+DPTR     ; according A, get signal from TABLE
+005E F590             57             MOV P1, A           ; output displayed signal
+A51 MACRO ASSEMBLER  EX44                                                                 10/11/2022 21:16:06 PAGE     2
+
+0060 7CFA             58                     MOV R4, #250  ; move 50 times into R4
+0062 7BFA             59     DEL1_500_us: MOV R3, #250     ; move 250 times into R3
+0064 DBFE             60             DJNZ R3, $          ; jump to itself R3 times
+0066 DCFA             61             DJNZ R4, DEL1_500_us  ; delay 25ms
+0068 1145             62             CALL KEYIN_B            ; jump to keyin B, output B
+006A 8099             63                     SJMP START          ; jump to scan keypad again
+006C EE               64     SUB1:   MOV A,R6
+006D 8FF0             65                     MOV B,R7
+006F 95F0             66                     SUBB A,B        ; A-B, then save into ACC
+0071 1141             67                     CALL KEYIN                      ; jump to KEYIN
+0073 020005           68                     LJMP START          ; jump to scan keypad again
+0076 EE               69     MUL1:   MOV A,R6
+0077 8FF0             70                     MOV B,R7
+0079 A4               71                     MUL AB                  ; multipulate A B
+007A 75F00A           72                     MOV B,#10
+007D 84               73                     DIV AB
+007E 1141             74                     CALL KEYIN                      ; jump to KEYIN
+0080 7CFA             75                     MOV R4, #250  ; move 50 times into R4
+0082 7BFA             76     DEL2_500_us: MOV R3, #250     ; move 250 times into R3
+0084 DBFE             77             DJNZ R3, $          ; jump to itself R3 times
+0086 DCFA             78             DJNZ R4, DEL2_500_us  ; delay 25ms
+0088 1145             79             CALL KEYIN_B            ; jump to keyin B, output B
+008A 020005           80                     LJMP START          ; jump to scan keypad again
+008D EE               81     DIV1:   MOV A,R6
+008E 8FF0             82                     MOV B,R7
+0090 84               83                     DIV AB                  ; multipulate A B 
+0091 1141             84                     CALL KEYIN                      ; jump to KEYIN
+0093 7CFA             85                     MOV R4, #250  ; move 50 times into R4
+0095 7BFA             86     DEL_500_us: MOV R3, #250     ; move 250 times into R3
+0097 DBFE             87             DJNZ R3, $          ; jump to itself R3 times
+0099 DCFA             88             DJNZ R4, DEL_500_us  ; delay 25ms
+009B 1145             89             CALL KEYIN_B            ; jump to keyin B, output B
+009D 020005           90                     LJMP START          ; jump to scan keypad again
+00A0 03               91     TABLE:  DB 00000011B        ; display 0”
+00A1 9F               92                     DB 10011111B        ; display 1“1”
+00A2 25               93             DB 00100101B        ; display 2“2”
+00A3 0D               94             DB 00001101B        ; display 4“3”
+00A4 99               95             DB 10011001B        ; display 4“4”
+00A5 49               96             DB 01001001B        ; display 5“5”
+00A6 41               97             DB 01000001B        ; display 6 “6”
+00A7 1B               98             DB 00011011B        ; display 7 “7”
+00A8 01               99             DB 00000001B        ; display 8
+00A9 09              100             DB 00001001B        ;display 9 
+                     101             END
+A51 MACRO ASSEMBLER  EX44                                                                 10/11/2022 21:16:06 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ADD1 . . . . . . .  C ADDR   0054H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+CALCULATE. . . . .  C ADDR   0030H   A   
+DEBOUNCE . . . . .  C ADDR   004BH   A   
+DEL1_500_US. . . .  C ADDR   0062H   A   
+DEL2_500_US. . . .  C ADDR   0082H   A   
+DEL_500_US . . . .  C ADDR   0095H   A   
+DE_500_US. . . . .  C ADDR   004DH   A   
+DIV1 . . . . . . .  C ADDR   008DH   A   
+GET. . . . . . . .  C ADDR   0023H   A   
+KEYIN. . . . . . .  C ADDR   0041H   A   
+KEYIN_B. . . . . .  C ADDR   0045H   A   
+MUL1 . . . . . . .  C ADDR   0076H   A   
+NUM_ONE. . . . . .  C ADDR   002DH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PRINT. . . . . . .  C ADDR   005DH   A   
+SCAN . . . . . . .  C ADDR   000BH   A   
+START. . . . . . .  C ADDR   0005H   A   
+SUB1 . . . . . . .  C ADDR   006CH   A   
+TABLE. . . . . . .  C ADDR   00A0H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

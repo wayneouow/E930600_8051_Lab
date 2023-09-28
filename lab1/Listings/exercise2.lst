@@ -1,0 +1,29 @@
+A51 MACRO ASSEMBLER  EXERCISE2                                                            09/27/2022 17:26:54 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\exercise2.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE exercise2.A51 SET(SMALL) DEBUG PRINT(.\Listings\exercise2.lst) OBJECT(.
+                      \Objects\exercise2.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0
+0000 7411              2     MOV A, #11H
+0002 75E022            3     MOV 0E0H, #22H
+0005 80FE              4     SJMP $
+                       5     END
+A51 MACRO ASSEMBLER  EXERCISE2                                                            09/27/2022 17:26:54 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

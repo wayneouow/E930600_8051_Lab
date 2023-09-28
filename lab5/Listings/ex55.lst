@@ -1,0 +1,68 @@
+A51 MACRO ASSEMBLER  EX55                                                                 10/18/2022 17:45:12 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\ex55.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE ex55.A51 SET(SMALL) DEBUG PRINT(.\Listings\ex55.lst) OBJECT(.\Objects\e
+                      x55.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H ;
+0000 E5FC              2     MOV A, 11111100B ;
+0002 758130            3     MOV SP, #30h    
+0005 8029              4     JMP LOOP
+0030                   5     ORG 0030h
+0030                   6     LOOP: 
+0030 F5A0              7     MOV P2, A ;
+0032 113B              8     CALL DELAY ;
+0034 D290              9     SETB P1.0;
+0036 D291             10     SETB P1.1;
+                      11     ;JNB P1.0, PI;
+                      12     ;JNB P1.1, PO;
+0038 23               13     RL A ;
+0039 80F5             14     SJMP LOOP ;
+                      15     
+003B                  16     DELAY:
+003B 7B04             17     MOV R3, #4 ; 
+                      18     
+003D 79FA             19     LOOP1:MOV R1, #250 ; loop 250
+                      20     
+003F 7AFA             21     LOOP2:MOV R2, #250 ; loop 250
+0041 DAFE             22     DJNZ R2, $;
+0043 D9FA             23     DJNZ R1, LOOP2 ;
+0045 DBF6             24     DJNZ R3, LOOP1 ;
+0047 22               25     RET ; 
+                      26     
+                      27     
+                      28     
+                      29     
+                      30     
+                      31     
+                      32     
+                      33     
+                      34     
+                      35     
+                      36     
+                      37     END;
+A51 MACRO ASSEMBLER  EX55                                                                 10/18/2022 17:45:12 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY. . . . . . .  C ADDR   003BH   A   
+LOOP . . . . . . .  C ADDR   0030H   A   
+LOOP1. . . . . . .  C ADDR   003DH   A   
+LOOP2. . . . . . .  C ADDR   003FH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
