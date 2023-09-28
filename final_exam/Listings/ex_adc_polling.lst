@@ -1,0 +1,191 @@
+C51 COMPILER V9.60.0.0   EX_ADC_POLLING                                                    12/20/2022 16:28:16 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EX_ADC_POLLING
+OBJECT MODULE PLACED IN .\Objects\ex_adc_polling.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ex_adc_polling.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Lis
+                    -tings\ex_adc_polling.lst) TABS(2) OBJECT(.\Objects\ex_adc_polling.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2          #include "lcd1602.h"
+   3          unsigned char Pattern4[]= {0x00,0x1F,0x15,0x1F,0x1F,0x0A,0x1B,0x00};
+   4          unsigned char x=0;
+   5          unsigned char n=0;
+   6          unsigned char n_tmp=1;
+   7          unsigned char bar[16];
+   8          unsigned char val[]="   ";
+   9          unsigned int marquee_i=0;
+  10          unsigned int intr_cnt=0; 
+  11          unsigned int cnt_tmp=1;
+  12          
+  13          unsigned int usecCounter = 0;
+  14          unsigned int msCounter   = 0;
+  15          unsigned int secCounter  = 0;
+  16          unsigned int hundred_sec  = 0;
+  17          unsigned int ten_sec      = 0;
+  18          unsigned int one_sec      = 0;
+  19          
+  20          //void UpdateTimeCounters();
+  21          
+  22          //void InitTimer0();
+  23          void InitIntr0();
+  24          void mode_1();
+  25          void mode_2();
+  26          void mode_3();
+  27          
+  28          void main()
+  29          {
+  30   1        InitIntr0();
+  31   1        
+  32   1        P3_4 = 0; //WR=0,clean the data
+  33   1        P3_4 = 1; //WR=1,analog convert to digital
+  34   1        
+  35   1        lcd1602_init();
+  36   1        lcd1602_display_switch(true,true,true);
+  37   1        lcd1602_write_cmd(0x0c);
+  38   1        CreateCustomCharacter(Pattern4,4);
+  39   1        lcd1602_string_set(0,0,"val:");
+  40   1        
+  41   1        while(1)
+  42   1        {
+  43   2          n=P1;
+  44   2          
+  45   2          if(cnt_tmp!=intr_cnt)
+  46   2          {
+  47   3            cnt_tmp=intr_cnt;
+  48   3            lcd1602_write_cmd(0x01);
+  49   3            lcd1602_char_set(14, 0, ' ');
+  50   3            lcd1602_char_set(14, 0, intr_cnt+0x30); 
+  51   3            
+  52   3            secCounter=0;
+  53   3            
+  54   3          }
+C51 COMPILER V9.60.0.0   EX_ADC_POLLING                                                    12/20/2022 16:28:16 PAGE 2   
+
+  55   2          switch(intr_cnt)
+  56   2          {
+  57   3            case 0:
+  58   3              
+  59   3              mode_1(); 
+  60   3              break;
+  61   3            case 1:
+  62   3              mode_2();
+  63   3              break;
+  64   3            case 2:
+  65   3              mode_3();
+  66   3              break;
+  67   3            
+  68   3          }
+  69   2          
+  70   2        }
+  71   1      
+  72   1      }
+  73          /////////////INIT/////////////
+  74          
+  75          void InitTimer0(void)
+  76          {
+  77   1        TMOD &= 0xF0;    // Clear 4bit field for timer0
+  78   1        TMOD |= 0x02;    // Set timer0 in mode 2
+  79   1        
+  80   1        TH0 = 0x05;      // 250 usec reloading time
+  81   1        TL0 = 0x05;      // First time value
+  82   1        
+  83   1        ET0 = 1;         // Enable Timer0 interrupts
+  84   1        EA  = 1;         // Global interrupt enable
+  85   1        
+  86   1        TR0 = 1;         // Start Timer 0
+  87   1      }
+  88          
+  89          void InitIntr0(void)
+  90          {
+  91   1        IT0 = 0; //enable a low-level signal on external interrupt
+  92   1        EX0 = 1; //enable INT0
+  93   1        EA = 1; //enable interrupt
+  94   1      }
+  95          
+  96          /////////////MODE/////////////
+  97          
+  98          //adc progress bar
+  99          void mode_1(void)
+ 100          {
+ 101   1        if(n>(n_tmp+2)|| n<(n_tmp-2))
+ 102   1        { 
+ 103   2          n_tmp=n;
+ 104   2          val[0]=(n/100)+0x30;
+ 105   2          val[1]=(n/10)%10+0x30;
+ 106   2          val[2]=(n%10)+0x30;
+ 107   2          lcd1602_string_set(5,0,"   ");
+ 108   2          lcd1602_string_set(5,0,val);
+ 109   2      
+ 110   2          for(x=0; x<16 ; x++)
+ 111   2          {
+ 112   3            bar[x]= (x<=(n/16)) ? 4 :' ';       
+ 113   3          }
+ 114   2          lcd1602_string_set(0,1,bar);
+ 115   2          
+ 116   2        }
+C51 COMPILER V9.60.0.0   EX_ADC_POLLING                                                    12/20/2022 16:28:16 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          //marquee
+ 120          void mode_2(void)
+ 121          {
+ 122   1        lcd1602_string_set(0,0,"Marquee");    
+ 123   1        lcd1602_string_set(marquee_i-1,1,"         ");
+ 124   1        lcd1602_string_set(marquee_i%16,1,"123456789");
+ 125   1        lcd1602_delay(30000);
+ 126   1        marquee_i++;
+ 127   1        
+ 128   1      }
+ 129          
+ 130          //timer
+ 131          void mode_3(void)
+ 132          {
+ 133   1        hundred_sec = secCounter/100+0x30;
+ 134   1        ten_sec     =(secCounter/10)%10+0x30;
+ 135   1        one_sec     = secCounter%10+0x30;
+ 136   1        lcd1602_string_set(1,0,"Time_cnt");
+ 137   1        lcd1602_char_set(0, 1, hundred_sec);
+ 138   1        lcd1602_char_set(1, 1, ten_sec);  
+ 139   1        lcd1602_char_set(2, 1, one_sec);
+ 140   1      
+ 141   1        lcd1602_delay(50000);
+ 142   1        lcd1602_delay(50000);
+ 143   1          
+ 144   1        
+ 145   1      }
+ 146          
+ 147          
+ 148          //interupt
+ 149          void int_0(void)interrupt 0
+ 150          {
+ 151   1        if(intr_cnt>=2)
+ 152   1        {
+ 153   2          intr_cnt=0;
+ 154   2          lcd1602_delay(30000);
+ 155   2        }
+ 156   1        else
+ 157   1        {
+ 158   2          intr_cnt++;
+ 159   2          lcd1602_delay(30000);
+ 160   2        }
+ 161   1        
+ 162   1      }
+ 163          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    581    ----
+   CONSTANT SIZE    =     46    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     49    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

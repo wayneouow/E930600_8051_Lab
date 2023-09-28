@@ -1,0 +1,329 @@
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EXAM_V1
+OBJECT MODULE PLACED IN .\Objects\exam_v1.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE exam_v1.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\e
+                    -xam_v1.lst) TABS(2) OBJECT(.\Objects\exam_v1.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2          #include "lcd1602.h"
+   3          unsigned char Pattern3[]= {0x00,0x0A,0x1F,0x1F,0x0E,0x04,0x00,0x00};
+   4          unsigned char Pattern4[]= {0x00,0x1F,0x15,0x1F,0x1F,0x0A,0x1B,0x00};
+   5          unsigned char x=0;
+   6          unsigned char n=0;
+   7          unsigned char n_tmp=1;
+   8          unsigned char bar[16];
+   9          unsigned char val[]="   ";
+  10          unsigned int marquee_i=0;
+  11          unsigned int marquee_x=0;
+  12          unsigned int intr_cnt=0; 
+  13          unsigned int cnt_tmp=1;
+  14          
+  15          unsigned char word[] = {'A','B','C'};
+  16          unsigned int str_i=0;
+  17          unsigned char str[] = "                ";
+  18          
+  19          unsigned int intr_one=0; 
+  20          unsigned int cnt_one=1;
+  21          
+  22          unsigned int ta_index=1;
+  23          
+  24          unsigned int usecCounter = 0;
+  25          unsigned int msCounter   = 0;
+  26          unsigned int secCounter  = 0;
+  27          unsigned int hundred_sec  = 0;
+  28          unsigned int ten_sec      = 0;
+  29          unsigned int one_sec      = 0;
+  30          
+  31          //void UpdateTimeCounters();
+  32          
+  33          //void InitTimer0();
+  34          
+  35          void InitIntr0();
+  36          void InitIntr1();
+  37          void mode_0();
+  38          void mode_off();
+  39          void mode_on();
+  40          void mode_3();
+  41          
+  42          void mode1_1();
+  43          void mode1_2();
+  44          void mode1_3();
+  45          void mode1_4();
+  46          
+  47          void main()
+  48          {
+  49   1        InitIntr0();
+  50   1        InitIntr1();
+  51   1        P3_4 = 0; //WR=0,clean the data
+  52   1        P3_4 = 1; //WR=1,analog convert to digital
+  53   1        
+  54   1        lcd1602_init();
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 2   
+
+  55   1        lcd1602_display_switch(true,true,true);
+  56   1        lcd1602_write_cmd(0x0c);
+  57   1        CreateCustomCharacter(Pattern3,3);
+  58   1        CreateCustomCharacter(Pattern4,4);
+  59   1        
+  60   1        while(1)
+  61   1        {
+  62   2          n=P1;
+  63   2          if(intr_one)
+  64   2          {
+  65   3            if(cnt_one!=intr_one)
+  66   3            {
+  67   4              cnt_one=intr_one;
+  68   4              lcd1602_write_cmd(0x01);      
+  69   4            }
+  70   3            switch(intr_one)
+  71   3            {
+  72   4              case 0:
+  73   4                break;
+  74   4              case 1:
+  75   4                mode1_1();  
+  76   4                break;
+  77   4              case 2:
+  78   4                mode1_2();
+  79   4                break;
+  80   4              case 3:
+  81   4                mode1_3();
+  82   4                break;
+  83   4              case 4:
+  84   4                mode1_4();
+  85   4                break;
+  86   4            } 
+  87   3          
+  88   3          } 
+  89   2          else
+  90   2          {
+  91   3            if(cnt_tmp!=intr_cnt)
+  92   3            {
+  93   4              cnt_tmp=intr_cnt;
+  94   4              lcd1602_write_cmd(0x01);
+  95   4              //lcd1602_char_set(14, 0, ' ');
+  96   4              //lcd1602_char_set(14, 0, intr_cnt+0x30); 
+  97   4              
+  98   4            }
+  99   3            switch(intr_cnt)
+ 100   3            {
+ 101   4              case 0:
+ 102   4                mode_0(); 
+ 103   4                break;
+ 104   4              case 1:
+ 105   4                mode_off();
+ 106   4                break;
+ 107   4              case 2:
+ 108   4                mode_on();
+ 109   4                break;
+ 110   4              case 3:
+ 111   4                mode_3();
+ 112   4                break;
+ 113   4            }
+ 114   3          }
+ 115   2          
+ 116   2          
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 3   
+
+ 117   2          
+ 118   2        }
+ 119   1      
+ 120   1      }
+ 121          /////////////INIT/////////////
+ 122          
+ 123          void InitTimer0(void)
+ 124          {
+ 125   1        TMOD &= 0xF0;    // Clear 4bit field for timer0
+ 126   1        TMOD |= 0x02;    // Set timer0 in mode 2
+ 127   1        
+ 128   1        TH0 = 0x05;      // 250 usec reloading time
+ 129   1        TL0 = 0x05;      // First time value
+ 130   1        
+ 131   1        ET0 = 1;         // Enable Timer0 interrupts
+ 132   1        EA  = 1;         // Global interrupt enable
+ 133   1        
+ 134   1        TR0 = 1;         // Start Timer 0
+ 135   1      }
+ 136          
+ 137          void InitIntr0(void)
+ 138          {
+ 139   1        IT0 = 0; //enable a low-level signal on external interrupt
+ 140   1        EX0 = 1; //enable INT0
+ 141   1        EA = 1; //enable interrupt
+ 142   1      }
+ 143          
+ 144          void InitIntr1(void)
+ 145          {
+ 146   1        IT1 = 0; //enable a low-level signal on external interrupt
+ 147   1        EX1 = 1; //enable INT0
+ 148   1      }
+ 149          
+ 150          /////////////MODE/////////////
+ 151          
+ 152          //adc progress bar
+ 153          void mode_0(void)
+ 154          {
+ 155   1        if(n>(n_tmp+3)|| n<(n_tmp-3))
+ 156   1        { 
+ 157   2          
+ 158   2          n_tmp=n;
+ 159   2          lcd1602_string_set(0,0,"      ");
+ 160   2          if(n<=80)
+ 161   2          {
+ 162   3            lcd1602_string_set(0,0,"LOW");
+ 163   3          }
+ 164   2          else if(n>=171)
+ 165   2          {
+ 166   3            lcd1602_string_set(0,0,"HIGH");
+ 167   3          }
+ 168   2          else
+ 169   2          {
+ 170   3            lcd1602_string_set(0,0,"MIDDLE");
+ 171   3          }
+ 172   2          val[0]=(n/100)+0x30;
+ 173   2          val[1]=(n/10)%10+0x30;
+ 174   2          val[2]=(n%10)+0x30;
+ 175   2          lcd1602_string_set(7,0,"   ");
+ 176   2          lcd1602_string_set(7,0,val);
+ 177   2          
+ 178   2            
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 4   
+
+ 179   2          for(x=0; x<16 ; x++)
+ 180   2          {
+ 181   3            bar[x]= (x<=(n/16)) ? 4 :' ';       
+ 182   3          }
+ 183   2          lcd1602_string_set(0,1,bar);
+ 184   2          
+ 185   2        }
+ 186   1      }
+ 187          
+ 188          void mode_off(void)
+ 189          {
+ 190   1        lcd1602_write_cmd(0x08);
+ 191   1      }
+ 192          
+ 193          
+ 194          void mode_on(void)
+ 195          {
+ 196   1        lcd1602_write_cmd(0x0C);
+ 197   1        lcd1602_string_set(0,0,"E94096267");
+ 198   1        lcd1602_char_set(14,0,3);
+ 199   1        lcd1602_char_set(15,0,4);
+ 200   1      }
+ 201          
+ 202          void mode_3(void)
+ 203          {
+ 204   1        
+ 205   1        lcd1602_string_set(0,0,"Best(");
+ 206   1        lcd1602_char_set(5,0,ta_index+0x30);
+ 207   1        lcd1602_char_set(6,0,')');
+ 208   1        lcd1602_string_set(0,1,"WORST(");
+ 209   1        lcd1602_char_set(6,1,ta_index+0x30);
+ 210   1        lcd1602_char_set(7,1,')');
+ 211   1        lcd1602_delay(30000);
+ 212   1        if(ta_index==6)
+ 213   1        {
+ 214   2          ta_index=1;
+ 215   2        }
+ 216   1        else
+ 217   1        {
+ 218   2          ta_index++;
+ 219   2        }
+ 220   1      }
+ 221          
+ 222          //----mode1----
+ 223          void mode1_1(void)
+ 224          {
+ 225   1        lcd1602_string_set(0,1,"                ");
+ 226   1        lcd1602_string_set(0,0,"Final exam");
+ 227   1      }
+ 228          
+ 229          void mode1_2(void)
+ 230          {
+ 231   1        lcd1602_string_set(0,0,"Marquee_char");   
+ 232   1        lcd1602_char_set(marquee_i-1,1,' ');
+ 233   1        lcd1602_char_set(marquee_i,1,4);
+ 234   1        lcd1602_char_set(marquee_i-2,1,' ');
+ 235   1        lcd1602_char_set(marquee_i-1,1,3);
+ 236   1        lcd1602_delay(10000);
+ 237   1        marquee_i++;
+ 238   1      }
+ 239          
+ 240          void mode1_3(void)
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 5   
+
+ 241          {
+ 242   1        lcd1602_string_set(0,0,"Marquee_str");
+ 243   1        
+ 244   1        lcd1602_string_set(0,0,"Marquee_char");   
+ 245   1        
+ 246   1        
+ 247   1        lcd1602_char_set(15-(marquee_i-1),1,' ');
+ 248   1        lcd1602_char_set(15-(marquee_i),1,4);
+ 249   1        lcd1602_char_set(15-(marquee_i-2),1,' ');
+ 250   1        lcd1602_char_set(15-(marquee_i-1),1,3);
+ 251   1        
+ 252   1        lcd1602_delay(10000);
+ 253   1        marquee_i++;
+ 254   1      
+ 255   1      }
+ 256          
+ 257          void mode1_4(void)
+ 258          {
+ 259   1      
+ 260   1        //lcd1602_char_set(15-(marquee_i-1),1,' ');
+ 261   1        lcd1602_char_set(15-(marquee_i),1,4);
+ 262   1        //lcd1602_char_set(15-(marquee_i-2),1,' ');
+ 263   1        lcd1602_char_set(15-(marquee_i-1),1,3);
+ 264   1        
+ 265   1      }
+ 266          
+ 267          //interupt
+ 268          void int_0(void)interrupt 0
+ 269          {
+ 270   1        if(intr_cnt>=3)
+ 271   1        {
+ 272   2          intr_cnt=0;
+ 273   2          lcd1602_delay(30000);
+ 274   2        }
+ 275   1        else
+ 276   1        {
+ 277   2          intr_cnt++;
+ 278   2          lcd1602_delay(30000);
+ 279   2        }
+ 280   1        
+ 281   1      }
+ 282          void int_1(void)interrupt 2
+ 283          {
+ 284   1        if(intr_one>=4)
+ 285   1        {
+ 286   2          intr_one=0;
+ 287   2          lcd1602_delay(30000);
+ 288   2        }
+ 289   1        else
+ 290   1        {
+ 291   2          intr_one++;
+ 292   2          lcd1602_delay(30000);
+ 293   2        }
+ 294   1        
+ 295   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    965    ----
+   CONSTANT SIZE    =    103    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   EXAM_V1                                                           12/20/2022 18:47:14 PAGE 6   
+
+   DATA SIZE        =     87    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

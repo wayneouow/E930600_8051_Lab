@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\lcd1602.obj",
+".\Objects\exam_v1.obj" 
+TO ".\Objects\final_v1" 
+PRINT(".\Listings\final_v1.m51") RAMSIZE(256) 

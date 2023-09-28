@@ -1,0 +1,221 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    12/11/2022  22:24:18  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\STARTUP.obj, .\Objects\ex11.obj TO .\Objects\lab11 PRINT (.\Listings\lab11.m51) RA
+>> MSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (?C_STARTUP)
+  .\Objects\ex11.obj (EX11)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?SIDIV)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
+
+
+LINK MAP OF MODULE:  .\Objects\lab11 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0008H     UNIT         ?DT?EX11
+            DATA    0010H     0002H     UNIT         _DATA_GROUP_
+            IDATA   0012H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+                    000EH     0005H                  *** GAP ***
+            CODE    0013H     0003H     ABSOLUTE     
+                    0016H     07EAH                  *** GAP ***
+            CODE    0800H     008BH     UNIT         ?C?LIB_CODE
+            CODE    088BH     0042H     UNIT         ?PR?TURN?EX11
+            CODE    08CDH     0030H     UNIT         ?PR?INT_0?EX11
+            CODE    08FDH     0030H     UNIT         ?PR?INT_1?EX11
+            CODE    092DH     002BH     UNIT         ?PR?_DELAY?EX11
+            CODE    0958H     001EH     UNIT         ?PR?MAIN?EX11
+            CODE    0976H     0010H     UNIT         ?CO?EX11
+            CODE    0986H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\lab11 (?C_STARTUP)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?EX11
+
+?PR?MAIN?EX11                  -----    -----
+  +--> ?PR?TURN?EX11
+
+?PR?TURN?EX11                  0010H    0002H
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  12/11/2022  22:24:18  PAGE 2
+
+
+  +--> ?PR?_DELAY?EX11
+
+?PR?_DELAY?EX11                -----    -----
+  +--> ?CO?EX11
+
+*** NEW ROOT ***************************************************
+
+?PR?INT_0?EX11                 -----    -----
+  +--> ?PR?_DELAY?EX11
+
+*** NEW ROOT ***************************************************
+
+?PR?INT_1?EX11                 -----    -----
+  +--> ?PR?_DELAY?EX11
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\lab11 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0986H         SEGMENT       ?C_C51STARTUP
+  I:0012H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0989H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0986H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0986H         LINE#         133
+  C:0988H         LINE#         134
+  C:0989H         LINE#         135
+  C:098AH         LINE#         136
+  C:098CH         LINE#         185
+  C:098FH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        EX11
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  12/11/2022  22:24:18  PAGE 3
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  B:00A8H.7       PUBLIC        EA
+  C:094DH         PUBLIC        _delay
+  D:0008H         PUBLIC        HS
+  D:000AH         PUBLIC        delay_time
+  C:0958H         PUBLIC        main
+  C:0976H         PUBLIC        one_phase
+  D:000CH         PUBLIC        dir
+  C:088BH         PUBLIC        turn
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:00A8H.2       PUBLIC        EX1
+  C:097AH         PUBLIC        two_phase
+  D:000EH         PUBLIC        R
+  C:097EH         PUBLIC        f_phase
+  C:08CDH         PUBLIC        int_0
+  C:08FDH         PUBLIC        int_1
+  -------         PROC          MAIN
+  C:0958H         LINE#         10
+  C:0958H         LINE#         11
+  C:0958H         LINE#         12
+  C:095EH         LINE#         13
+  C:0963H         LINE#         14
+  C:0967H         LINE#         15
+  C:0969H         LINE#         16
+  C:096BH         LINE#         17
+  C:096DH         LINE#         18
+  C:096FH         LINE#         19
+  C:0971H         LINE#         20
+  C:0971H         LINE#         21
+  C:0971H         LINE#         22
+  C:0974H         LINE#         23
+  -------         ENDPROC       MAIN
+  -------         PROC          TURN
+  -------         DO            
+  D:0010H         SYMBOL        x
+  -------         ENDDO         
+  C:088BH         LINE#         26
+  C:088BH         LINE#         27
+  C:088BH         LINE#         29
+  C:0893H         LINE#         30
+  C:0893H         LINE#         31
+  C:0898H         LINE#         32
+  C:0898H         LINE#         33
+  C:0898H         LINE#         34
+  C:089BH         LINE#         35
+  C:08B1H         LINE#         36
+  C:08B1H         LINE#         38
+  C:08B1H         LINE#         39
+  C:08B6H         LINE#         40
+  C:08B6H         LINE#         41
+  C:08B6H         LINE#         42
+  C:08B9H         LINE#         43
+  C:08CCH         LINE#         44
+  C:08CCH         LINE#         45
+  -------         ENDPROC       TURN
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  12/11/2022  22:24:18  PAGE 4
+
+
+  -------         PROC          L?0025
+  -------         ENDPROC       L?0025
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        t
+  C:094DH         LINE#         48
+  C:094DH         LINE#         49
+  C:094DH         LINE#         50
+  C:0957H         LINE#         51
+  -------         ENDPROC       _DELAY
+  -------         PROC          INT_0
+  C:08CDH         LINE#         52
+  C:08DAH         LINE#         54
+  C:08EBH         LINE#         55
+  C:08F2H         LINE#         56
+  -------         ENDPROC       INT_0
+  -------         PROC          INT_1
+  C:08FDH         LINE#         57
+  C:090AH         LINE#         59
+  C:091BH         LINE#         60
+  C:0922H         LINE#         61
+  -------         ENDPROC       INT_1
+  -------         ENDMOD        EX11
+
+  -------         MODULE        ?C?SIDIV
+  C:0800H         PUBLIC        ?C?SIDIV
+  -------         ENDMOD        ?C?SIDIV
+
+  -------         MODULE        ?C?UIDIV
+  C:0836H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0110H BYTE (13%) *
+******************************************************************************
+
+Program Size: data=19.0 xdata=0 code=411
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

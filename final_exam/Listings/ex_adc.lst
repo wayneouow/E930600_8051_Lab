@@ -1,0 +1,88 @@
+C51 COMPILER V9.60.0.0   EX_ADC                                                            12/19/2022 17:50:19 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EX_ADC
+OBJECT MODULE PLACED IN .\Objects\ex_adc.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ex_adc.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\ex
+                    -_adc.lst) TABS(2) OBJECT(.\Objects\ex_adc.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2          #include "lcd1602.h"
+   3          unsigned char Pattern4[]= {0x00,0x1F,0x15,0x1F,0x1F,0x0A,0x1B,0x00};
+   4          unsigned char x=0;
+   5          unsigned char n=0;
+   6          unsigned char n_tmp=1;
+   7          unsigned char x_tmp=1;
+   8          unsigned char val[3];
+   9          void main()
+  10          {
+  11   1        lcd1602_init();
+  12   1        lcd1602_display_switch(true,true,true);
+  13   1        lcd1602_write_cmd(0x0c);
+  14   1        CreateCustomCharacter(Pattern4,4);
+  15   1      
+  16   1        IT0 = 0; //enable a low-level signal on external interrupt
+  17   1        EX0 = 1; //enable INT0
+  18   1        EA = 1; //enable interrupt
+  19   1        P3_4 = 0; //WR=0,clean the data
+  20   1        P3_4 = 1; //WR=1,analog convert to digital
+  21   1      
+  22   1        while(1)
+  23   1        {
+  24   2          /*
+  25   2          n=x/16;
+  26   2          val[2]=x%10;
+  27   2          val[1]=x%100-x%10;
+  28   2          val[0]=x/100;
+  29   2          if(n!=n_tmp)
+  30   2          {
+  31   2            
+  32   2            lcd1602_string_set(15-n_tmp,1," ");
+  33   2            n_tmp=n;
+  34   2            
+  35   2            lcd1602_char_set(15-n,1,4);
+  36   2      
+  37   2          }
+  38   2          */
+  39   2            n=x;
+  40   2          
+  41   2          if(n>(n_tmp+3)|| n<(n_tmp-3))
+  42   2          {
+  43   3          
+  44   3          lcd1602_string_set(15-(n_tmp/16),1," ");
+  45   3          n_tmp=n;
+  46   3          lcd1602_delay(1000);
+  47   3          lcd1602_char_set(15-(n/16),1,4);
+  48   3      
+  49   3          }
+  50   2          
+  51   2        }
+  52   1      
+  53   1      }
+  54          void int_0(void)interrupt 0 //INT0 interrupt function
+C51 COMPILER V9.60.0.0   EX_ADC                                                            12/19/2022 17:50:19 PAGE 2   
+
+  55          {
+  56   1        P3_5 = 0; //RD=0,read the digital data
+  57   1        x= P1;
+  58   1        P3_5 = 1; //RD=1
+  59   1        P3_4 = 0; //WR=0,clean the data
+  60   1        P3_4 = 1; //WR=1,analog convert to digital
+  61   1      }
+  62            
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    137    ----
+   CONSTANT SIZE    =      2    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

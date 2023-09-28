@@ -1,0 +1,129 @@
+C51 COMPILER V9.60.0.0   EX1010                                                            12/14/2022 23:01:07 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EX1010
+OBJECT MODULE PLACED IN .\Objects\ex1010.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\lab10\ex1010.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
+                    -stings\ex1010.lst) TABS(2) OBJECT(.\Objects\ex1010.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2          void print_msg(char *);
+   3          void cmd_write(char);
+   4          void data_write(char);
+   5          void delay(unsigned int);
+   6          void CreateCustomCharacter (unsigned char *, const char );
+   7          
+   8          unsigned char Pattern1[]= {0x00,0x0A,0x0A,0x00,0x11,0x0E,0x00,0x00};
+   9          unsigned char Pattern2[]= {0x01,0x03,0x05,0x09,0x0B,0x1B,0x18,0x00};
+  10          unsigned char Pattern3[]= {0x00,0x0A,0x1F,0x1F,0x0E,0x04,0x00,0x00};
+  11          unsigned char Pattern4[]= {0x00,0x1F,0x15,0x1F,0x1F,0x0A,0x1B,0x00};
+  12          unsigned char Pattern5[]= {0x0A,0x0A,0x1F,0x15,0x1B,0x1F,0x00,0x00};
+  13          unsigned char Pattern6[]= {0x00,0x0E,0x1F,0x15,0x0E,0x0E,0x00,0x00};
+  14          unsigned char Pattern7[]= {0x04,0x0E,0x1F,0x04,0x0E,0x1F,0x04,0x00};
+  15          
+  16          
+  17          
+  18          #define RS P2_0
+  19          #define E P2_1
+  20          #define Data_PORT P0
+  21          
+  22          void main()
+  23          {
+  24   1        CreateCustomCharacter(Pattern1,1);
+  25   1        CreateCustomCharacter(Pattern2,2);
+  26   1        CreateCustomCharacter(Pattern3,3);
+  27   1        CreateCustomCharacter(Pattern4,4);
+  28   1        CreateCustomCharacter(Pattern5,5);
+  29   1        CreateCustomCharacter(Pattern6,6);
+  30   1        CreateCustomCharacter(Pattern7,7);
+  31   1      
+  32   1        cmd_write(0x38);
+  33   1        cmd_write(0x0C);
+  34   1        cmd_write(0x06);
+  35   1        cmd_write(0x01);
+  36   1        
+  37   1        cmd_write(0x80);
+  38   1        print_msg("E94096267");
+  39   1      
+  40   1        cmd_write(0xC0) ;     //Place cursor at 6th position of first row 
+  41   1        //data_write(1);      //Display Pattern1
+  42   1        //data_write(2);
+  43   1        //data_write(3);
+  44   1        //data_write(4);
+  45   1        //data_write(5);
+  46   1        //data_write(6);
+  47   1        //data_write(7);
+  48   1        data_write(4);
+  49   1        data_write(4);
+  50   1        data_write(4);
+  51   1        data_write(4);
+  52   1        data_write(4);
+  53   1        data_write(4);
+  54   1        data_write(4);
+C51 COMPILER V9.60.0.0   EX1010                                                            12/14/2022 23:01:07 PAGE 2   
+
+  55   1        data_write(4);
+  56   1        data_write(4);
+  57   1        data_write(4);
+  58   1        data_write(4);
+  59   1        data_write(4);
+  60   1        while (1);
+  61   1      }
+  62          
+  63          void cmd_write(char cmd)
+  64          {
+  65   1        P0=cmd;
+  66   1        RS=0;
+  67   1        E=1;
+  68   1        delay(100);
+  69   1        E=0;
+  70   1      }
+  71          
+  72          void data_write(char val)
+  73          {
+  74   1        P0=val;
+  75   1        RS=1;
+  76   1        E=1;
+  77   1        delay(100);
+  78   1        E=0;
+  79   1      }
+  80          
+  81          
+  82          void CreateCustomCharacter (unsigned char *Pattern, const char Location)
+  83          { 
+  84   1        int i=0; 
+  85   1        int addr=0x40+(Location*8);     //Send the Address of CGRAM
+  86   1        for (i=0; i<8; i++)
+  87   1        {
+  88   2          cmd_write (addr+i);         //Pass the bytes of pattern on LCD 
+  89   2          data_write (Pattern[i]);
+  90   2        }
+  91   1      }
+  92          
+  93          
+  94          void print_msg(char *msg)
+  95          {
+  96   1        for (;*msg!='\0';msg++)
+  97   1        data_write(*msg);
+  98   1      }
+  99          
+ 100          void delay(unsigned int i)
+ 101          {
+ 102   1        while (i--);
+ 103   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    338    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     56      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
